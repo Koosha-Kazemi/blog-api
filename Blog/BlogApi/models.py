@@ -25,3 +25,15 @@ class Posts(models.Model):
 
 
 
+class Comments(models.Model):
+    post = models.ForeignKey(Posts, on_delete = models.CASCADE, related_name = 'comment_post')
+    user = models.ForeignKey(User, on_delete = models.CASCADE)
+    comment = models.TextField(max_length=100)
+    like_dislike = models.ForeignKey(Likes, on_delete = models.CASCADE)
+    is_accept = models.BooleanField(default = False)
+    reply_to = models.ForeignKey(User, blank = True, null = True, on_delete = models.CASCADE, related_name='reply_user')
+    create = models.DateTimeField(auto_now_add = True)
+    update = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return f'{self.user.username} comment on {self.post.title}'
