@@ -1,12 +1,27 @@
 from rest_framework import serializers
 
+from django.contrib.auth import get_user_model
+
 from .models import Genres, Posts
+
+
+User = get_user_model()
+
+
 
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genres
         fields = ('name',)
+
+
+
+
+class UserSerializer(serializers.ModelSerializer):
+     class Meta:
+          model = User
+          fields = ('username',)
 
 
 
@@ -48,4 +63,6 @@ class PostSerializer(serializers.ModelSerializer):
          instance.genre.set(genre_data)
          instance.save()
          return instance
+    
+
 
