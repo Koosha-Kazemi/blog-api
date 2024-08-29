@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
 
-from .models import Genres, Posts
+from .models import Genres, Posts, Comments
 
 
 User = get_user_model()
@@ -66,3 +66,8 @@ class PostSerializer(serializers.ModelSerializer):
     
 
 
+
+class CommentSerializer(serializers.ModelSerializer):
+     class Meta:
+          model = Comments
+          fields = '__all__'
