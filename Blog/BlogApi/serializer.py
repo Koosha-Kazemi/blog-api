@@ -1,9 +1,10 @@
+from dataclasses import replace
+
 from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
 
-from .models import Genres, Posts, Comments
-
+from .models import Genres, Posts, Comments, Likes
 
 User = get_user_model()
 
@@ -13,6 +14,11 @@ class GenreSerializer(serializers.ModelSerializer):
         model = Genres
         fields = ('name',)
 
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Likes
+        fields ='__all__'
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -78,3 +84,18 @@ class CommentSerializer(serializers.ModelSerializer):
         instance.comment = validate_data.get('like_dislike', instance.like_dislike)
         instance.save()
         return instance
+
+
+
+
+class PostDetailSerializer(serializers.ModelSerializer):
+    comment = CommentSerializer(source='comment_post', read_only=True, many=True)
+    class Meta:
+        model = Posts
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['author'] = instance.author.username
+        representation['genre'] = ', '.join([genre.name for genre in instance.genre.all()])
+        return representation
