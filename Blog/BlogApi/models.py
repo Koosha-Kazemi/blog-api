@@ -37,3 +37,10 @@ class Comments(models.Model):
 
     def __str__(self):
         return f'{self.user.username} comment on {self.post.title}'
+
+
+class Likes(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comments, on_delete=models.CASCADE)
+    create = models.DateTimeField(auto_now_add=True)
+    is_like = models.BooleanField()
