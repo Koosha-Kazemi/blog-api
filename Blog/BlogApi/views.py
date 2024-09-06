@@ -3,8 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from .models import Posts
-from .serializer import PostSerializer, PostDetailSerializer
+from .models import Posts, Comments
+from .serializer import PostSerializer, PostDetailSerializer, CreateCommentSerializer
 
 
 class PostList(generics.ListAPIView):
@@ -19,5 +19,14 @@ class PostDetail(APIView):
         return Response({
             'post' : serializer.data
         })
+
+
+class CreateComment(generics.CreateAPIView):
+    queryset = Comments.objects.all()
+    serializer_class = CreateCommentSerializer
+
+    def perform_create(self, serializer):
+        post = get_object_or_404(Posts, id = self.kwargs['pk'])
+        serializer.save(post = post)
 
 
