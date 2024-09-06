@@ -3,6 +3,8 @@ from dataclasses import replace
 from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
+from setuptools.config.pyprojecttoml import validate
+from yaml import serialize_all
 
 from .models import Genres, Posts, Comments, Likes
 
@@ -85,6 +87,16 @@ class CommentSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
+class CreateCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comments
+        fields = ('comment',)
+        
+
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        return Comments.objects.create(**validated_data)
 
 
 
