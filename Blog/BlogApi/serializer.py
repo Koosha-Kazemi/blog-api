@@ -70,7 +70,7 @@ class PostSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comments
-        fields = '__all__'
+        exclude = ('is_accept',)
 
     def create(self, validated_data):
         request = self.context['request']
@@ -86,6 +86,12 @@ class CommentSerializer(serializers.ModelSerializer):
         instance.comment = validate_data.get('like_dislike', instance.like_dislike)
         instance.save()
         return instance
+
+
+    def to_representation(self, instance):
+            representation = super().to_representation(instance)
+            representation['user'] = instance.user.username
+            return representation
 
 
 class CreateCommentSerializer(serializers.ModelSerializer):
