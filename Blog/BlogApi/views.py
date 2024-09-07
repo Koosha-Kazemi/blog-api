@@ -1,3 +1,5 @@
+from keyword import kwlist
+
 from rest_framework import generics
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -15,7 +17,7 @@ class PostDetail(generics.RetrieveAPIView):
     serializer_class = PostDetailSerializer
 
     def get_object(self):
-        return Posts.objects.get(id=self.kwargs['pk'])
+        return get_object_or_404(Posts, id=self.kwargs['pk'])
 
 class CreateComment(generics.CreateAPIView):
     queryset = Comments.objects.all()
