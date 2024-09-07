@@ -20,7 +20,12 @@ class GenreSerializer(serializers.ModelSerializer):
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Likes
-        fields ='__all__'
+        fields = ('is_like',)
+
+
+    def create(self, validated_data):
+            validate_data = self.context['request'].user
+            return Likes.objects.create(**validated_data)
 
 
 class UserSerializer(serializers.ModelSerializer):
