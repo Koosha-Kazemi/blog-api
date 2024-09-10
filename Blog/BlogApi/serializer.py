@@ -73,24 +73,24 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    like = serializers.SerializerMethodField()
+    dislike = serializers.SerializerMethodField()
     class Meta:
         model = Comments
         exclude = ('is_accept',)
 
-    def create(self, validated_data):
-        request = self.context['request']
-        post = request.data.get('post')
-        user = request.user
-        validated_data['post'] = post
-        validated_data['user'] = user
-        return Comments.objects.create(**validated_data)
+    def get_like(self, obj):
+        return Likes.objects.filter(comment=obj, is_like=True).count()
 
-    def update(self, instance, validate_data):
-        instance.comment = validate_data.get('comment', instance.comment)
-        instance.reply = validate_data.get('reply', instance.reply)
-        instance.comment = validate_data.get('like_dislike', instance.like_dislike)
-        instance.save()
-        return instance
+    def get_dislike(self, obj):
+        return Likes.objects.filter(comment=obj, is_like=False).count()
+
+
+    def to_representation(self, instance):
+            representation = super().to_representation(instance)
+            representation['user'] = instance.user.username
+            return representation
+
 
 
     def to_representation(self, instance):
