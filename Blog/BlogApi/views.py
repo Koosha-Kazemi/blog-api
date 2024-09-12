@@ -28,12 +28,17 @@ class CreateComment(generics.CreateAPIView):
         serializer.save(post = post)
 
 
-class CreateLike(generics.CreateAPIView):
-    queryset = Likes.objects.all()
+class ResetLike(generics.RetrieveUpdateAPIView):
     serializer_class = LikeSerializer
 
-    def perform_create(self, serializer):
-        comment = get_object_or_404(Comments, id =self.kwargs['comment_id'])
-        serializer.save(comment=comment)
+    def get_object(self):
+        return Likes.objects.get(comment_id = self.kwargs['comment_id'])
 
-
+    def perform_update(self, serializer):
+        CurrentLikeStatus = self.request.data.get('is_like')
+        like_status = self.get_object()
+        if CurrentLikeStatus.title() == str(like_status.is_like):
+            like_status.delete()
+        else :
+            like_status.is_like = not like_status.is_like
+            like_status.save()
