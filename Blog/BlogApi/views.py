@@ -35,7 +35,7 @@ class ResetLike(generics.RetrieveUpdateAPIView):
         return Likes.objects.get(comment_id = self.kwargs['comment_id'])
 
     def perform_update(self, serializer):
-        CurrentLikeStatus = self.request.data.get('is_like')
+        CurrentLikeStatus = self.request.data.get('is_like', 'false')
         like_status = self.get_object()
         if CurrentLikeStatus.title() == str(like_status.is_like):
             like_status.delete()
