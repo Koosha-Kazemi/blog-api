@@ -1,11 +1,13 @@
 from keyword import kwlist
 
+from django.template.defaulttags import comment
 from rest_framework import generics
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from .models import Posts, Comments, Likes
-from .serializer import PostSerializer, PostDetailSerializer, CreateCommentSerializer, LikeSerializer
+from .serializer import PostSerializer, PostDetailSerializer, CreateCommentSerializer, LikeSerializer, \
+    CommentReplySerializer
 
 
 class PostView(generics.ListAPIView):
@@ -28,6 +30,19 @@ class CreateComment(generics.CreateAPIView):
         serializer.save(post = post)
 
 
+
+
+class CreateLike(generics.CreateAPIView):
+    queryset = Likes.objects.all()
+    serializer_class = LikeSerializer
+
+    def perform_create(self, serializer):
+        comment = get_object_or_404(Comments, id =self.kwargs['comment_id'])
+        serializer.save(comment=comment)
+
+
+
+
 class ResetLike(generics.RetrieveUpdateAPIView):
     serializer_class = LikeSerializer
 
@@ -42,3 +57,10 @@ class ResetLike(generics.RetrieveUpdateAPIView):
         else :
             like_status.is_like = not like_status.is_like
             like_status.save()
+
+
+
+
+
+
+
