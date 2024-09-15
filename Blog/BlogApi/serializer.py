@@ -1,5 +1,3 @@
-from dataclasses import replace
-
 from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
@@ -77,7 +75,7 @@ class CommentSerializer(serializers.ModelSerializer):
     dislike = serializers.SerializerMethodField()
     class Meta:
         model = Comments
-        exclude = ('is_accept',)
+        exclude = ('is_accept','reply_to')
 
     def get_like(self, obj):
         return Likes.objects.filter(comment=obj, is_like=True).count()
@@ -122,3 +120,12 @@ class PostDetailSerializer(serializers.ModelSerializer):
         representation['author'] = instance.author.username
         representation['genre'] = ', '.join([genre.name for genre in instance.genre.all()])
         return representation
+
+
+class CommentReplySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comments
+        fields = ('reply_to', 'user', 'comment')
+        read_only_fields = ('reply_to', 'user')
+
+
