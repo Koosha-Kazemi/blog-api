@@ -60,6 +60,22 @@ class ResetLike(generics.RetrieveUpdateAPIView):
 
 
 
+class CreateReply(generics.CreateAPIView):
+    serializer_class = CommentReplySerializer
+
+    def perform_create(self, serializer):
+        serializer.save(
+            user = self.request.user,
+            reply_to = get_object_or_404(Comments, id= self.kwargs['comment_id']).user,
+
+        )
+
+
+
+
+
+
+
 
 
 
