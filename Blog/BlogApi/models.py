@@ -26,7 +26,7 @@ class Posts(models.Model):
 
 
 class Comments(models.Model):
-    post = models.ForeignKey(Posts, on_delete = models.CASCADE, related_name = 'comment_post')
+    post = models.ForeignKey(Posts, on_delete = models.CASCADE, null=True, blank=True ,related_name = 'comment_post')
     user = models.ForeignKey(User, on_delete = models.CASCADE)
     comment = models.TextField(max_length=100)
     is_accept = models.BooleanField(default = False)
