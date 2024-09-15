@@ -110,10 +110,17 @@ class CreateCommentSerializer(serializers.ModelSerializer):
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
-    comment = CommentSerializer(source='comment_post', read_only=True, many=True)
+    comment = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Posts
         fields = '__all__'
+
+
+    def get_comment(self, obj):
+        comment = Comments.objects.filter(post=obj, reply_to__isnull=True)
+        return CommentSerializer(comment, many=True).data
+
+
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
