@@ -1,6 +1,3 @@
-from keyword import kwlist
-
-from django.template.defaulttags import comment
 from rest_framework import generics
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -61,14 +58,18 @@ class ResetLike(generics.RetrieveUpdateAPIView):
 
 
 class CreateReply(generics.CreateAPIView):
-    serializer_class = CommentReplySerializer
+    queryset = Comments.objects.all()
+    serializer_class =  CreateCommentSerializer
+
 
     def perform_create(self, serializer):
+        parent_comment = get_object_or_404(Comments, id=self.kwargs['comment_id'])
         serializer.save(
             user = self.request.user,
-            reply_to = get_object_or_404(Comments, id= self.kwargs['comment_id']).user,
-
+            post = parent_comment.post,
+            reply_to = parent_comment
         )
+
 
 
 
