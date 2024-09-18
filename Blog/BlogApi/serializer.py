@@ -129,10 +129,3 @@ class PostDetailSerializer(serializers.ModelSerializer):
         return representation
 
 
-class CommentReplySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comments
-        fields = ('reply_to', 'user', 'comment')
-        read_only_fields = ('reply_to', 'user')
-
-
