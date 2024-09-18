@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from .models import Posts, Comments, Likes
 from .serializer import PostSerializer, PostDetailSerializer, CreateCommentSerializer, LikeSerializer, \
-    CommentReplySerializer
+CommentSerializer
 
 
 class PostView(generics.ListAPIView):
