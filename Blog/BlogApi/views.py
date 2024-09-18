@@ -73,6 +73,13 @@ class CreateReply(generics.CreateAPIView):
 
 
 
+class ReplyList(generics.ListAPIView):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        comment = get_object_or_404(Comments, id=self.kwargs['comment_id'])
+        return comment.reply_user.all()
+
 
 
 
