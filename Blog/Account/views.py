@@ -10,14 +10,3 @@ User = get_user_model()
 class RegisterUser(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterUserSerializer
-
-
-    def perform_create(self, serializer):
-        password = make_password(self.request.data.get('password'))
-        serializer.save(
-            password = password
-        )
-
-
-
-
