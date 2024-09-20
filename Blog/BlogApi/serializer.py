@@ -91,7 +91,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 
-    
+
 
 class CreateCommentSerializer(serializers.ModelSerializer):
     class Meta:
