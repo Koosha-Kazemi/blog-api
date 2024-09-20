@@ -7,7 +7,7 @@ from .serializer import PostSerializer, PostDetailSerializer, CreateCommentSeria
 CommentSerializer
 
 
-class PostView(generics.ListAPIView):
+class PostListCerate(generics.ListCreateAPIView):
     queryset = Posts.objects.all()
     serializer_class = PostSerializer
 
