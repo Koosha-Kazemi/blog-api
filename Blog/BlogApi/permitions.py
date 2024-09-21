@@ -14,7 +14,7 @@ class IsWriterOrAdminOrReadOnly(BasePermission):
             return True
 
         elif request.user.is_anonymous:
-            return
+            return False
         return (
             request.user.is_superuser or
                 request.user.is_staff or
