@@ -1,11 +1,9 @@
-from inspect import CORO_CREATED
-
-from django.template.context_processors import request
 from rest_framework import generics
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.settings import perform_import
 
+from .permitions import *
 from .models import Posts, Comments, Likes
 from .serializer import PostSerializer, PostDetailSerializer, CreateCommentSerializer, LikeSerializer, \
 CommentSerializer
@@ -14,7 +12,7 @@ CommentSerializer
 class PostListCerate(generics.ListCreateAPIView):
     queryset = Posts.objects.all()
     serializer_class = PostSerializer
-
+    permission_classes = (IsAdmin, IsWriterOrAdminOrReadOnly)
 
 class PostDetail(generics.RetrieveAPIView):
     serializer_class = PostDetailSerializer
