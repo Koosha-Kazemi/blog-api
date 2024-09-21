@@ -85,10 +85,7 @@ class ReplyComment(generics.ListCreateAPIView):
                 post = parent_comment.post,
                 reply_to = parent_comment
             )
-        return Response(
-            {'message' : 'you can not reply for reply comment'}
-        )
-
+        
 
 
 
@@ -99,22 +96,6 @@ class ReplyList(generics.ListAPIView):
         comment = get_object_or_404(Comments, id=self.kwargs['comment_id'])
         return comment.reply_user.all()
 
-
-# class CreateReply(generics.CreateAPIView):
-#     queryset = Comments.objects.all()
-#     serializer_class = CreateCommentSerializer
-#
-#     def perform_create(self, serializer):
-#         parent_comment = get_object_or_404(Comments, id=self.kwargs['comment_id'])
-#         if not parent_comment.reply_to:
-#             serializer.save(
-#                 user=self.request.user,
-#                 post=parent_comment.post,
-#                 reply_to=parent_comment
-#             )
-#         return Response(
-#             {'message': 'you can not reply for reply comment'}
-#         )
 
 
 
