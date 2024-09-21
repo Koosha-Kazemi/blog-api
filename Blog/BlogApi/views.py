@@ -41,10 +41,9 @@ class CreateLike(generics.CreateAPIView):
         serializer.save(comment=comment)
 
 
-
-
-class ResetLike(generics.RetrieveUpdateAPIView):
+class ResetLike(generics.UpdateAPIView):
     serializer_class = LikeSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self):
         return Likes.objects.get(comment_id = self.kwargs['comment_id'])
@@ -57,6 +56,7 @@ class ResetLike(generics.RetrieveUpdateAPIView):
         else :
             like_status.is_like = not like_status.is_like
             like_status.save()
+
 
 
 
