@@ -17,11 +17,20 @@ class PostListCerate(generics.ListCreateAPIView):
 
 
 
-class PostDetail(generics.RetrieveAPIView):
-    serializer_class = PostDetailSerializer
+class PostDetail(generics.RetrieveUpdateAPIView):
+    permission_classes = (IsWriterOrAdminOrReadOnly,)
+
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return PostDetailSerializer
+        elif self.request.method in ['PUT', 'PATCH']:
+            return PostSerializer
 
     def get_object(self):
         return get_object_or_404(Posts, id=self.kwargs['pk'])
+
+
 
 class CreateComment(generics.CreateAPIView):
     queryset = Comments.objects.all()
