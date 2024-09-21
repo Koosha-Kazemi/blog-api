@@ -1,6 +1,7 @@
 from rest_framework import generics
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import serializers
 
 from .permitions import *
 from .models import Posts, Comments, Likes
@@ -62,7 +63,7 @@ class ResetLike(generics.UpdateAPIView):
 
 class ReplyComment(generics.ListCreateAPIView):
     queryset = Comments.objects.all()
-    # serializer_class =  CreateCommentSerializer
+
 
     def get_queryset(self):
         if self.request.method == 'GET':
@@ -70,7 +71,6 @@ class ReplyComment(generics.ListCreateAPIView):
             return comment.reply_user.all()
         elif self.request.method == "POST":
             return Comments.objects.all()
-
 
     def get_serializer_class(self):
             if self.request.method == "GET":
@@ -86,6 +86,8 @@ class ReplyComment(generics.ListCreateAPIView):
                 post = parent_comment.post,
                 reply_to = parent_comment
             )
+        else:
+            raise serializers.ValidationError('you can not reply for reply comment')
         
 
 
