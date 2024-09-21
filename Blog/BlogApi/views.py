@@ -14,14 +14,6 @@ class PostListCerate(generics.ListCreateAPIView):
     queryset = Posts.objects.all()
     serializer_class = PostSerializer
     permission_classes = (IsWriterOrAdminOrReadOnly,)
-    # def get_permissions(self):
-    #     print(f'the mothod ->       {self.request.method}')
-    #     if self.request.method == 'GET':
-    #         return [AllowAny()]
-    #     elif self.request.method == 'POST':
-    #          print("now we are in post method")
-    #          return [IsWriterOrAdminOrReadOnly()]
-    #     return super().get_permissions()
 
 
 
