@@ -1,7 +1,6 @@
 from rest_framework import generics
 from rest_framework.generics import get_object_or_404
-from rest_framework.response import Response
-from rest_framework.settings import perform_import
+from rest_framework.permissions import IsAuthenticated
 
 from .permitions import *
 from .models import Posts, Comments, Likes
@@ -23,6 +22,7 @@ class PostDetail(generics.RetrieveAPIView):
 class CreateComment(generics.CreateAPIView):
     queryset = Comments.objects.all()
     serializer_class = CreateCommentSerializer
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         post = get_object_or_404(Posts, id = self.kwargs['pk'])
