@@ -34,6 +34,7 @@ class CreateComment(generics.CreateAPIView):
 class CreateLike(generics.CreateAPIView):
     queryset = Likes.objects.all()
     serializer_class = LikeSerializer
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         comment = get_object_or_404(Comments, id =self.kwargs['comment_id'])
