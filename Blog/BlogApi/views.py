@@ -113,7 +113,13 @@ class ReplyList(generics.ListAPIView):
 
 
 
+class CommentList(generics.ListAPIView):
+    serializer_class = CommentSerializer
+    permission_classes = (IsAdmin,)
 
+    def get_queryset(self):
+        post = get_object_or_404(Posts, id=self.kwargs['pk'])
+        return post.comment_post.filter(is_accept=False)
 
 
 
