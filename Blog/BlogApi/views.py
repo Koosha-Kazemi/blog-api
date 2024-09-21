@@ -1,6 +1,7 @@
 from rest_framework import generics
+from rest_framework.decorators import permission_classes
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import serializers
 
 from .permitions import *
@@ -12,7 +13,17 @@ CommentSerializer
 class PostListCerate(generics.ListCreateAPIView):
     queryset = Posts.objects.all()
     serializer_class = PostSerializer
-    permission_classes = (IsAdmin, IsWriterOrAdminOrReadOnly)
+    permission_classes = (IsWriterOrAdminOrReadOnly,)
+    # def get_permissions(self):
+    #     print(f'the mothod ->       {self.request.method}')
+    #     if self.request.method == 'GET':
+    #         return [AllowAny()]
+    #     elif self.request.method == 'POST':
+    #          print("now we are in post method")
+    #          return [IsWriterOrAdminOrReadOnly()]
+    #     return super().get_permissions()
+
+
 
 class PostDetail(generics.RetrieveAPIView):
     serializer_class = PostDetailSerializer

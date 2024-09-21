@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
-from setuptools.config.pyprojecttoml import validate
-from yaml import serialize_all
+
+from django.contrib.auth.models import AnonymousUser
 
 from .models import Genres, Posts, Comments, Likes
 
@@ -52,6 +52,10 @@ class PostSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
          user = self.context['request'].user
+
+         if isinstance(user, AnonymousUser):
+             raise serializers.ValidationError('you cant post')
+
          validated_data['author'] = user
          genre_data = validated_data.pop('genre')
          post = Posts.objects.create(**validated_data)
@@ -66,7 +70,6 @@ class PostSerializer(serializers.ModelSerializer):
          instance.genre.set(genre_data)
          instance.save()
          return instance
-
 
 
 
@@ -113,7 +116,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
 
     def get_comment(self, obj):
-        comment = Comments.objects.filter(post=obj, reply_to__isnull=True)
+        comment = Comments.objects.filter(post=obj, is_accept=True, reply_to__isnull=True)
         return CommentSerializer(comment, many=True).data
 
 
