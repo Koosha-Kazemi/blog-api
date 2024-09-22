@@ -131,3 +131,11 @@ class AcceptComment(generics.UpdateAPIView):
     def get_object(self):
             return get_object_or_404(Comments, id=self.kwargs['comment_id'])
 
+
+
+class CommentReplyList(generics.ListAPIView):
+    serializer_class = CommentSerializer
+    permission_class = (IsAdmin,)
+    def get_queryset(self):
+        comment = get_object_or_404(Comments, id=self.kwargs['comment_id'])
+        return comment.reply_user.filter(is_accept=False)
