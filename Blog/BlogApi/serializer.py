@@ -128,3 +128,16 @@ class PostDetailSerializer(serializers.ModelSerializer):
         return representation
 
 
+
+
+
+class AcceptCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comments
+        fields = ('is_accept',)
+
+    def update(self, instance, validated_data):
+            instance.is_accept= validated_data.get('is_accept', instance.is_accept)
+            instance.save()
+            return instance
+
