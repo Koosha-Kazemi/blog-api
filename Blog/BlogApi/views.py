@@ -59,12 +59,12 @@ class ResetLike(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
-        return Likes.objects.get(comment_id = self.kwargs['comment_id'])
+        return get_object_or_404(Likes, comment__id=self.kwargs['comment_id'])
 
     def perform_update(self, serializer):
         CurrentLikeStatus = self.request.data.get('is_like', 'false')
         like_status = self.get_object()
-        if CurrentLikeStatus.title() == str(like_status.is_like):
+        if CurrentLikeStatus == like_status.is_like:
             like_status.delete()
         else :
             like_status.is_like = not like_status.is_like
@@ -80,7 +80,7 @@ class ReplyComment(generics.ListCreateAPIView):
     def get_queryset(self):
         if self.request.method == 'GET':
             comment = get_object_or_404(Comments, id=self.kwargs['comment_id'])
-            return comment.reply_user.all()
+            return comment.reply_user.filter(is_accept=True)
         elif self.request.method == "POST":
             return Comments.objects.all()
 
