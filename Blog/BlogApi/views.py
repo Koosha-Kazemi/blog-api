@@ -51,6 +51,8 @@ class CreateLike(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         comment = get_object_or_404(Comments, id =self.kwargs['comment_id'])
+        if comment.likes_set.exists():
+            raise serializers.ValidationError('you can not do it again')
         serializer.save(comment=comment)
 
 
