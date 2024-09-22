@@ -7,7 +7,7 @@ from rest_framework import serializers
 from .permitions import *
 from .models import Posts, Comments, Likes
 from .serializer import PostSerializer, PostDetailSerializer, CreateCommentSerializer, LikeSerializer, \
-CommentSerializer
+CommentSerializer, AcceptCommentSerializer
 
 
 class PostListCerate(generics.ListCreateAPIView):
@@ -123,4 +123,11 @@ class CommentList(generics.ListAPIView):
 
 
 
+
+class AcceptComment(generics.UpdateAPIView):
+    serializer_class = AcceptCommentSerializer
+    permission_class = (IsAdmin,)
+
+    def get_object(self):
+            return get_object_or_404(Comments, id=self.kwargs['comment_id'])
 
