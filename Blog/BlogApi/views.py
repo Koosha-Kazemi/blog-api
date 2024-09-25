@@ -1,5 +1,5 @@
 from rest_framework import generics
-from rest_framework.decorators import permission_classes
+from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import serializers
@@ -49,12 +49,31 @@ class CreateLike(generics.CreateAPIView):
     serializer_class = LikeSerializer
     permission_classes = (IsAuthenticated,)
 
-    def perform_create(self, serializer):
-        comment = get_object_or_404(Comments, id =self.kwargs['comment_id'])
-        if comment.likes_set.exists():
-            raise serializers.ValidationError('you can not do it again')
-        serializer.save(comment=comment)
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        like_status = request.data.get('is_like')
+        comment = get_object_or_404(Comments, id=kwargs['comment_id'])
+        serializer = self.get_serializer(data=request.data)
 
+        try:
+            current_like = Likes.objects.get(comment=comment, user=user)
+            if current_like.is_like == like_status:
+                return Response({
+                    'error': 'you can not do this again'
+                })
+            else:
+                current_like.is_like = like_status
+                current_like.save()
+
+        except:
+            serializer.is_valid(raise_exception=True)
+            serializer.save(
+                comment=comment
+            )
+
+        return Response({
+            'message': 'ok'
+        })
 
 class ResetLike(generics.UpdateAPIView):
     serializer_class = LikeSerializer
