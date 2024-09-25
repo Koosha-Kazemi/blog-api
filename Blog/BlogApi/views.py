@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import serializers
+from rest_framework.status import HTTP_400_BAD_REQUEST
 
 from .permitions import *
 from .models import Posts, Comments, Likes
@@ -59,8 +60,8 @@ class CreateLike(generics.CreateAPIView):
             current_like = Likes.objects.get(comment=comment, user=user)
             if current_like.is_like == like_status:
                 return Response({
-                    'error': 'you can not do this again'
-                })
+                    'error': 'you can not do this again',
+                }, status=HTTP_400_BAD_REQUEST)
             else:
                 current_like.is_like = like_status
                 current_like.save()
