@@ -89,9 +89,7 @@ class ResetLike(generics.UpdateAPIView):
         if CurrentLikeStatus == like_status.is_like:
             like_status.delete()
         else :
-            like_status.is_like = not like_status.is_like
-            like_status.save()
-
+                raise ValueError('you can not choose this option')
 
 
 
@@ -145,6 +143,13 @@ class CommentList(generics.ListAPIView):
 
 
 
+class CommentPostDetail(generics.ListAPIView):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        return Comments.objects.filter(post__id=self.kwargs['pk'],is_accept=True)
+
+
 
 class AcceptComment(generics.UpdateAPIView):
     serializer_class = AcceptCommentSerializer
@@ -157,7 +162,8 @@ class AcceptComment(generics.UpdateAPIView):
 
 class CommentReplyList(generics.ListAPIView):
     serializer_class = CommentSerializer
-    permission_class = (IsAdmin,)
+    permission_classes = (IsAdmin,)
+
     def get_queryset(self):
         comment = get_object_or_404(Comments, id=self.kwargs['comment_id'])
         return comment.reply_user.filter(is_accept=False)
