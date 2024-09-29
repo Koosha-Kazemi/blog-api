@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import serializers
 from rest_framework.status import HTTP_400_BAD_REQUEST
 
-from .permitions import *
+from .permission import *
 from .models import Posts, Comments, Likes
 from .serializer import PostSerializer, PostDetailSerializer, CreateCommentSerializer, LikeSerializer, \
 CommentSerializer, AcceptCommentSerializer
