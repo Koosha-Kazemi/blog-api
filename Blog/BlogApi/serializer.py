@@ -117,7 +117,6 @@ class CreateCommentSerializer(serializers.ModelSerializer):
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
-    comment = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Posts
         fields = '__all__'
